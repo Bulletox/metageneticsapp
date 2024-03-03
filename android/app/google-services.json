@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "23156474245",
+    "project_id": "flutterdam2",
+    "storage_bucket": "flutterdam2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23156474245:android:450017dd5df4ebd6fa84ec",
+        "android_client_info": {
+          "package_name": "com.example.metageneticsapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBYQ-FxFThtJo2_B3FOk9GkCiYa1WFAfs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
