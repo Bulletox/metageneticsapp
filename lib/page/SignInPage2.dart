@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '/AuthService.dart'; // Importa el servicio de autenticación
+
 class SignInPage2 extends StatelessWidget {
   const SignInPage2({Key? key}) : super(key: key);
 
@@ -22,9 +21,7 @@ class SignInPage2 extends StatelessWidget {
               ? Column(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
-                    _Logo(
-                        isSmallScreen:
-                            true), // Añade el parámetro isSmallScreen
+                    _Logo(isSmallScreen: true),
                     _FormContent(),
                   ],
                 )
@@ -34,9 +31,8 @@ class SignInPage2 extends StatelessWidget {
                   child: Row(
                     children: const [
                       Expanded(
-                          child: _Logo(
-                              isSmallScreen:
-                                  false)), // Añade el parámetro isSmallScreen
+                        child: _Logo(isSmallScreen: false),
+                      ),
                       Expanded(
                         child: Center(child: _FormContent()),
                       ),
@@ -50,9 +46,9 @@ class SignInPage2 extends StatelessWidget {
 }
 
 class _Logo extends StatelessWidget {
-  final bool isSmallScreen; // Añade esta propiedad
+  final bool isSmallScreen;
   const _Logo({Key? key, required this.isSmallScreen})
-      : super(key: key); // Modifica el constructor para recibir isSmallScreen
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,16 +56,11 @@ class _Logo extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(16.0),
-      margin: const EdgeInsets.only(bottom: 16.0), // Ajusta según sea necesario
-      // Usa isSmallScreen para determinar el ancho del logo en pantallas pequeñas
+      margin: const EdgeInsets.only(bottom: 16.0),
       child: Image.asset(
         largeLogoPath,
-        width: isSmallScreen
-            ? 300
-            : 200, // Aquí se ajusta el ancho para pantallas pequeñas
-        height: isSmallScreen
-            ? null
-            : 200, // Permite que el alto sea flexible en pantallas pequeñas
+        width: isSmallScreen ? 300 : 200,
+        height: isSmallScreen ? null : 200,
         fit: BoxFit.contain,
       ),
     );
@@ -87,7 +78,6 @@ class _FormContentState extends State<_FormContent> {
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final AuthService _authService = AuthService(); // Instancia de AuthService
 
   @override
   Widget build(BuildContext context) {
@@ -144,9 +134,7 @@ class _FormContentState extends State<_FormContent> {
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _isPasswordVisible
-                        ? Icons.visibility_off
-                        : Icons.visibility,
+                    _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
                   ),
                   onPressed: () {
                     setState(() {
@@ -191,13 +179,8 @@ class _FormContentState extends State<_FormContent> {
                 ),
                 IconButton(
                   icon: const Icon(FontAwesomeIcons.google),
-                  onPressed: () async {
-                    User? user = await _authService.signInWithGoogle(context);
-                    if (user != null) {
-                      // User has successfully logged in
-                      // Navigate to another screen or handle successful login
-                      print("User signed in: ${user.email}");
-                    }
+                  onPressed: () {
+                    // Placeholder for Google sign-in logic
                   },
                   color: Colors.red,
                 ),
@@ -216,5 +199,3 @@ class _FormContentState extends State<_FormContent> {
     );
   }
 }
-
-Widget _gap() => const SizedBox(height: 16);

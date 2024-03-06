@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import './page/SignInPage2.dart'; // Asegúrate de que la ruta al archivo es correcta.
-import 'package:google_fonts/google_fonts.dart'; 
-import 'package:firebase_core/firebase_core.dart';
+import './page/SignInPage2.dart'; // Asegúrate de que la ruta al archivo es correcta.;
+// import 'package:firebase_admin/firebase_admin.dart';
+// import 'package:firebase_admin/src/credential.dart';
+ // Import your Firebase options
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Asegura la inicialización de los widgets.
-  await Firebase.initializeApp(); // Inicializa Firebase de forma asíncrona.
   runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -18,11 +18,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         // Agrega Google Fonts al tema.
-        textTheme: GoogleFonts.latoTextTheme(
-          Theme.of(context).textTheme,
-        ),
       ),
-      home: SignInPage2(), // Usamos SignInPage2 como pantalla de inicio.
+      home: const SignInPage2(), // Usamos SignInPage2 como pantalla de inicio.
     );
   }
 }
