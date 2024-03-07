@@ -38,11 +38,7 @@ dependencies:
   video_player: ^2.8.2
   font_awesome_flutter: ^10.7.0
   google_fonts: ^6.2.0
-  firebase_core: ^2.25.5 
-  firebase_auth: ^4.17.0
-  cloud_firestore: ^4.14.0
-  google_sign_in: ^6.2.1
-  # firebase_admin: ^0.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -62,11 +58,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - lib/assets/images/medico.jpg
-    - lib/assets/images/medico3.png
-    - lib/assets/images/fav_icon.png
-    - lib/assets/images/logo-white.png
-    - lib/assets/videos/background-video.mp4
+    - lib/assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

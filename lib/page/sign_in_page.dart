@@ -20,7 +20,7 @@ class _SignInPage2State extends State<SignInPage2> {
 
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("lib/assets/images/medico3.png"),
             fit: BoxFit.cover,
@@ -32,25 +32,25 @@ class _SignInPage2State extends State<SignInPage2> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Logo(isSmallScreen: true),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 500),
-                  // transitionBuilder: (Widget child, Animation<double> animation) {
-                  //   return FadeTransition(
-                  //     child: child,
-                  //     opacity: animation,
-                  //   );
-                  // },
-                  transitionBuilder:
-                      (Widget child, Animation<double> animation) {
+                  duration: const Duration(milliseconds: 700),
+                  transitionBuilder: (Widget child, Animation<double> animation) {
                     return FadeTransition(
+                      child: child,
                       opacity: animation,
-                      child: ScaleTransition(
-                        scale: animation,
-                        child: child,
-                      ),
                     );
                   },
+                  // transitionBuilder:
+                  //     (Widget child, Animation<double> animation) {
+                  //   return FadeTransition(
+                  //     opacity: animation,
+                  //     child: ScaleTransition(
+                  //       scale: animation,
+                  //       child: child,
+                  //     ),
+                  //   );
+                  // },
 
                   child: _showSignUp
                       ? FormContentSignUp(key: UniqueKey())
@@ -64,8 +64,8 @@ class _SignInPage2State extends State<SignInPage2> {
                   },
                   child: Text(
                     _showSignUp
-                        ? '¿Ya tienes una cuenta? Iniciar sesión'
-                        : '¿No tienes una cuenta? Inscribirse',
+                        ? '¿Already have an account? log in'
+                        : '¿Not have an account? sign up',
                   ),
                 ),
               ],

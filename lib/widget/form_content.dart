@@ -68,7 +68,9 @@ class _FormContentState extends State<FormContent> {
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                    _isPasswordVisible
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                   ),
                   onPressed: () {
                     setState(() {
@@ -77,30 +79,6 @@ class _FormContentState extends State<FormContent> {
                   },
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            CheckboxListTile(
-              value: _rememberMe,
-              onChanged: (bool? value) {
-                setState(() {
-                  _rememberMe = value!;
-                });
-              },
-              title: const Text('Remember me'),
-              controlAffinity: ListTileControlAffinity.leading,
-              contentPadding: EdgeInsets.zero,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState?.validate() ?? false) {
-                  // Insert sign-in logic here
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
-                  );
-                }
-              },
-              child: const Text('Sign In'),
             ),
             const SizedBox(height: 16),
             Row(
@@ -115,6 +93,14 @@ class _FormContentState extends State<FormContent> {
                   color: Colors.blue[800],
                 ),
                 IconButton(
+                  icon: const Icon(FontAwesomeIcons.github),
+                  onPressed: () {
+                    // Placeholder for GitHub login logic
+                    print('GitHub sign-in button pressed');
+                  },
+                  color: Colors.black,
+                ),
+                IconButton(
                   icon: const Icon(FontAwesomeIcons.google),
                   onPressed: () {
                     // Placeholder for Google sign-in logic
@@ -122,13 +108,16 @@ class _FormContentState extends State<FormContent> {
                   },
                   color: Colors.red,
                 ),
-                IconButton(
-                  icon: const Icon(FontAwesomeIcons.github),
+                ElevatedButton(
                   onPressed: () {
-                    // Placeholder for GitHub login logic
-                    print('GitHub sign-in button pressed');
+                    if (_formKey.currentState?.validate() ?? false) {
+                      // Insert sign-in logic here
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Processing Data')),
+                      );
+                    }
                   },
-                  color: Colors.black,
+                  child: const Text('Sign Up'),
                 ),
               ],
             ),

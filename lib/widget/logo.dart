@@ -7,7 +7,7 @@ class Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String largeLogoPath = "lib/assets/images/logo-white.png";
+    const String largeLogoPath = "lib/assets/images/logo-white.png";
 
     return Container(
       padding: const EdgeInsets.all(16.0),
