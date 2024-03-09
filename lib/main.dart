@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Metagenetics App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         // Agrega Google Fonts al tema.
       ),

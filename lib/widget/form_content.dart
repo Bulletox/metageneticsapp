@@ -10,7 +10,6 @@ class FormContent extends StatefulWidget {
 
 class _FormContentState extends State<FormContent> {
   bool _isPasswordVisible = false;
-  bool _rememberMe = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -19,7 +18,8 @@ class _FormContentState extends State<FormContent> {
       padding: const EdgeInsets.all(16.0),
       margin: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.8),
+        // color: Colors.white.withOpacity(0.8),
+        color: Colors.white.withOpacity(1),
         borderRadius: BorderRadius.circular(8.0),
       ),
       constraints: const BoxConstraints(maxWidth: 300),
@@ -32,7 +32,7 @@ class _FormContentState extends State<FormContent> {
             TextFormField(
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
+                  return 'Please enter email';
                 }
                 bool emailValid = RegExp(
                         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -53,7 +53,7 @@ class _FormContentState extends State<FormContent> {
             TextFormField(
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
+                  return 'Please enter Password';
                 }
                 if (value.length < 6) {
                   return 'Password must be at least 6 characters';
@@ -117,7 +117,9 @@ class _FormContentState extends State<FormContent> {
                       );
                     }
                   },
-                  child: const Text('Sign Up'),
+                  child: const Text('Sign in',
+                      style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold,),
+                  ),
                 ),
               ],
             ),
