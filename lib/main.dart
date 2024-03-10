@@ -1,17 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
+import 'package:metageneticsapp/firebase_options.dart';
 import 'page/sign_in_page.dart';
-// import 'page/sign_up_page.dart';
-// import './page/SignInPage2.dart'; // Asegúrate de que la ruta al archivo es correcta.;
-// import 'package:firebase_admin/firebase_admin.dart';
-// import 'package:firebase_admin/src/credential.dart';
- // Import your Firebase options
+
  
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Asegúrate de llamar a este método al inicio
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, // Utiliza las opciones de firebase_options.dart
+  );
   runApp(MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   @override

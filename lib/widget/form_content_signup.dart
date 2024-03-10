@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FormContentSignUp extends StatefulWidget {
   const FormContentSignUp({Key? key}) : super(key: key);
@@ -11,6 +12,7 @@ class FormContentSignUp extends StatefulWidget {
 class _FormContentSignUpState extends State<FormContentSignUp>
     with TickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -34,8 +36,42 @@ class _FormContentSignUpState extends State<FormContentSignUp>
 
     // Retraso para iniciar la animación para dar efecto de aparición
     Future.delayed(const Duration(milliseconds: 500), () {
-      _animationController.forward();
+      if (mounted) {
+        // Verifica si el estado todavía está montado
+        _animationController.forward();
+      }
     });
+  }
+
+  Future<void> _register() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      print("Form is valid, attempting to register...");
+      try {
+        final UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+        print("Registration successful, user: ${userCredential.user}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration successful')),
+        );
+        // Navega a otra pantalla si es necesario
+      } on FirebaseAuthException catch (e) {
+        print("FirebaseAuthException caught: $e");
+        // Maneja diferentes códigos de error aquí
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registration failed: ${e.message}')),
+        );
+      } catch (e) {
+        print("General exception caught: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registration failed: $e')),
+        );
+      }
+    } else {
+      print("Form is not valid");
+    }
   }
 
   @override
@@ -65,6 +101,7 @@ class _FormContentSignUpState extends State<FormContentSignUp>
   List<Widget> buildFormChildren() {
     return [
       TextFormField(
+        controller: _emailController, // Asegúrate de agregar esta línea
         decoration: const InputDecoration(
           labelText: 'Email',
           prefixIcon: Icon(Icons.email),
@@ -202,6 +239,7 @@ class _FormContentSignUpState extends State<FormContentSignUp>
             onPressed: () {
               if (_formKey.currentState?.validate() ?? false) {
                 // Insert sign-in logic here
+                _register();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Processing Data')),
                 );
@@ -209,11 +247,14 @@ class _FormContentSignUpState extends State<FormContentSignUp>
             },
             child: const Text(
               'Sign Up',
-              style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold,),
+              style: TextStyle(
+                color: Colors.redAccent,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
-      ) 
+      )
     ];
   }
 

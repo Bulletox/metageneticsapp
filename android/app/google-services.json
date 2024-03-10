@@ -12,7 +12,12 @@
           "package_name": "com.example.metageneticsapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "23156474245-1lm2s9hirbmln5hl9g04m969lo8nr28i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCBYQ-FxFThtJo2_B3FOk9GkCiYa1WFAfs"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23156474245-1lm2s9hirbmln5hl9g04m969lo8nr28i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "23156474245-7ikq3avinj2kojgr7ki2gug88pv75dvr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.metageneticsapp"
+              }
+            }
+          ]
         }
       }
     }
