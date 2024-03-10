@@ -29,3 +29,27 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+// import 'package:flutter/material.dart';
+// import 'page/HomePage.dart';
+
+
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized(); // Asegura la inicialización de los widgets.
+//   //await Firebase.initializeApp(); // Inicializa Firebase de forma asíncrona.
+//   runApp(MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false, // Quitar la pequeña cinta que pone debug
+//       title: 'Metagenetics App',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//         visualDensity: VisualDensity.adaptivePlatformDensity,
+//       ),
+//       home: HomePage(), // Usamos SignInPage2 como pantalla de inicio.
+//     );
+//   }
+// }

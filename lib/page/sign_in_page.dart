@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widget/logo.dart'; // Importa logo.dart
-import '../widget/form_content.dart'; // Importa form_content.dart
-import '../widget/form_content_signup.dart'; // Importa form_content_signup.dart
+import '../widgets/singin/logo.dart'; // Importa logo.dart
+import '../widgets/singin/form_content_signin.dart'; // Importa form_content.dart
+import '../widgets/singin/form_content_signup.dart'; // Importa form_content_signup.dart
 
 class SignInPage2 extends StatefulWidget {
   const SignInPage2({Key? key}) : super(key: key);
