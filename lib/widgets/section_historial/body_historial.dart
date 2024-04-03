@@ -9,7 +9,7 @@ class BodyHistorial extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(height: 30), // Margen arriba
+          const SizedBox(height: 30), // Margen arriba
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
@@ -17,14 +17,14 @@ class BodyHistorial extends StatelessWidget {
                 Row(
                   // mainAxisAlignment: MainAxisAlignment.center, // Elimina o comenta esta línea
                   children: [
-                    Text(
+                    const Text(
                       '📊', // Emoji para el gráfico
                       style: TextStyle(
                         fontSize: 20,
                         fontFamily: 'Noto Color Emoji', // Fuente para emojis
                       ),
                     ),
-                    SizedBox(width: 10), // Espacio entre el emoji y el texto
+                    const SizedBox(width: 10), // Espacio entre el emoji y el texto
                     Text(
                       'Estadísticas Semanales',
                       style: GoogleFonts.poppins(
@@ -35,7 +35,7 @@ class BodyHistorial extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 10), // Espacio entre el texto y el gráfico
+                const SizedBox(height: 10), // Espacio entre el texto y el gráfico
                 Center(
                   child: Container(
                     height: 250,
@@ -49,7 +49,7 @@ class BodyHistorial extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 20), // Espacio entre el gráfico y la siguiente sección
+          const SizedBox(height: 20), // Espacio entre el gráfico y la siguiente sección
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -64,14 +64,14 @@ class BodyHistorial extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Text(
+                        const Text(
                           '🍎', // Emoji de la manzana
                           style: TextStyle(
                             fontSize: 20,
                             fontFamily: 'Noto Color Emoji', // Fuente de emojis
                           ),
                         ),
-                        SizedBox(width: 10), // Espacio entre el emoji y el texto
+                        const SizedBox(width: 10), // Espacio entre el emoji y el texto
                         Text(
                           'Alimentación',
                           style: GoogleFonts.poppins(
@@ -108,14 +108,14 @@ class BodyHistorial extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Text(
+                        const Text(
                           '❤️', // Emoji del corazón
                           style: TextStyle(
                             fontSize: 20,
                             fontFamily: 'Noto Color Emoji', // Fuente de emojis
                           ),
                         ),
-                        SizedBox(width: 10), // Espacio entre el emoji y el texto
+                        const SizedBox(width: 10), // Espacio entre el emoji y el texto
                         Text(
                           'Pulsaciones',
                           style: GoogleFonts.poppins(

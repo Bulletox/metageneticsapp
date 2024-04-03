@@ -4,15 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class WeeklyBarChart extends StatelessWidget {
-  final List<double> yValues = [
-    1500,
-    3700,
-    3200,
-    7000,
-    2000,
-    1700,
-    2400
-  ]; 
+  final List<double> yValues = [1500, 3700, 3200, 7000, 2000, 1700, 2400];
 
   @override
   Widget build(BuildContext context) {
