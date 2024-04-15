@@ -4,8 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 enum BottomNavigationIndex {
   History,
-  Appointments,
+  Citas,
   Home,
+  Period,
   Profile,
 }
 
@@ -46,10 +47,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
       case 0:
         return BottomNavigationIndex.History;
       case 1:
-        return BottomNavigationIndex.Appointments;
+        return BottomNavigationIndex.Citas;
       case 2:
         return BottomNavigationIndex.Home;
       case 3:
+        return BottomNavigationIndex.Period;
+      case 4:
         return BottomNavigationIndex.Profile;
       default:
         return BottomNavigationIndex.Home;
@@ -86,6 +89,18 @@ final _navBarItems = [
     icon: const Icon(Icons.home),
     title: Text(
       'Home',
+      style: GoogleFonts.poppins(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    selectedColor: Colors.redAccent,
+    unselectedColor: Colors.grey,
+  ),
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.calendar_month),
+    title: Text(
+      'Ovulación',
       style: GoogleFonts.poppins(
         fontSize: 14,
         fontWeight: FontWeight.bold,
