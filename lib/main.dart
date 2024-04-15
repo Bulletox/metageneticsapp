@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:metageneticsapp/firebase_options.dart';
+import 'package:metageneticsapp/page/HomePage.dart';
 import 'page/sign_in_page.dart';
+import 'page/HomePage.dart';
 
  
 
@@ -17,14 +19,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Metagenetics Appp',
+      title: 'Metagenetics App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         // Agrega Google Fonts al tema.
       ),
-      home: const SignInPage2(),
+      home: const HomePage(),
       // home: const SignUpPage(), // Usamos SignInPage2 como pantalla de inicio.
     );
   }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:metageneticsapp/widgets/section_citas/body_citas.dart';
 import 'package:metageneticsapp/widgets/section_historial/body_historial.dart';
 import 'package:metageneticsapp/widgets/section_perfil/body_perfil.dart';
 import '../widgets/navigation_bars/nav_bottom.dart';
 import '../widgets/navigation_bars/nav_top.dart';
 import '../widgets/section_home/body_home.dart';
-import '../widgets/section_historial/body_historial.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -54,8 +55,8 @@ class _HomePageState extends State<HomePage> {
     switch (index) {
       case BottomNavigationIndex.History:
         return BodyHistorial();
-      case BottomNavigationIndex.Appointments:
-        return BodyHome();
+      case BottomNavigationIndex.Citas:
+        return BodyCitas();
       case BottomNavigationIndex.Home:
         return BodyHome();
       case BottomNavigationIndex.Profile:
