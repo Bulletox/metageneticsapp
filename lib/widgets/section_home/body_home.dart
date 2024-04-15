@@ -63,7 +63,7 @@ class _BodyHomeState extends State<BodyHome> {
           Padding(
             padding: const EdgeInsets.all(22),
             child: SizedBox(
-              height: 460, // 350 Para movile simulator (Iphone 13 PRO MAX) 460 para chrome
+              height: 470, // 350 Para movile simulator (Iphone 13 PRO MAX) 470 para chrome
               child: HomeGrid(), // Utilizamos el widget de GridView personalizado
             ),
           ),
