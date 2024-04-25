@@ -1,92 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'callappointment.dart' as call_appointment;
 
 class AppointmentCard extends StatelessWidget {
+  final call_appointment.AppointmentData appointment;
+
+  const AppointmentCard({Key? key, required this.appointment}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      margin: const EdgeInsets.symmetric(horizontal: 22),
-      decoration: BoxDecoration(
-        color: Color(0xFFffdcdc),
+    // Definir colores y estilos para la tarjeta
+    const cardColor = Color(0xFFffdcdc);
+    const titleColor = Colors.black;
+    const subTitleColor = Color(0xFF4c4242);
+    const detailColor = Color(0xFFFF5151);
+
+    // Puedes ajustar los estilos según tu diseño
+    final titleStyle = GoogleFonts.poppins(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: titleColor,
+    );
+
+    final subTitleStyle = GoogleFonts.poppins(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: subTitleColor,
+    );
+
+    final detailStyle = GoogleFonts.poppins(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: detailColor,
+    );
+
+    // Construir la tarjeta de cita
+    return Card(
+      color: cardColor,
+      margin: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      child: 
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Atención especializada',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              Row(
-                children: [
-                  Icon(Icons.edit, color: Colors.black),
-                  SizedBox(width: 10),
-                  Icon(Icons.delete, color: Colors.black),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-           // Ajuste de espacio vertical
-          Text(
-            'Ginecología',
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFFFF5151),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Título de la tarjeta
+            Text('Atención especializada', style: titleStyle),
+            const SizedBox(height: 8), // Espacio vertical
+
+            // Subtítulo (especialidad)
+            Text(appointment.specialty, style: subTitleStyle),
+            const SizedBox(height: 8), // Espacio vertical
+
+            // ID del doctor
+            Text('Dr. ${appointment.doctorName}', style: subTitleStyle),
+            const SizedBox(height: 20), // Espacio vertical
+
+            // Detalles de la cita
+            Row(
+              children: [
+                Icon(Icons.location_on, color: subTitleColor, size: 20),
+                const SizedBox(width: 3), // Espacio entre el icono y el texto
+                Text('CAP Montclar', style: subTitleStyle),
+                const Spacer(), // Para empujar la fecha hacia la derecha
+                Text(appointment.date, style: detailStyle), // Fecha y hora
+              ],
             ),
-          ),
-          SizedBox(height: 8), // Ajuste de espacio vertical
-          Text(
-            'Dra. Cristina González',
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF4c4242),
-            ),
-          ),
-          SizedBox(height: 20), // Ajuste de espacio vertical
-          Row(
-            children: [
-              Icon(
-                Icons.location_on,
-                color: Color(0xFF4c4242),
-                size: 20,
-              ),
-              SizedBox(width: 3), // Espacio entre el icono y el texto
-              Text(
-                'CAP Montclar',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF4c4242),
-                ),
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    'Jueves 20 de Marzo a las 22:00',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFFFF5151),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+
+            // Íconos de acción (editar, eliminar)
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   children: const [
+            //     Icon(Icons.edit, color: titleColor),
+            //     SizedBox(width: 10),
+            //     Icon(Icons.delete, color: titleColor),
+            //   ],
+            // ),
+          ],
+        ),
       ),
     );
   }

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'appointment_card.dart'; // Importa el widget AppointmentCard
-import 'calendar.dart'; // Importa el widget AppointmentCard
+// Importa AppointmentData y getAppointments con el prefijo call_appointment.
+import 'package:metageneticsapp/widgets/section_citas/callappointment.dart'
+    as call_appointment;
+import 'package:metageneticsapp/widgets/section_citas/calendar.dart';
+// Importa AppointmentCard con el prefijo appointment_card.
+import 'package:metageneticsapp/widgets/section_citas/appointment_card.dart'
+    as appointment_card;
 
 class BodyCitas extends StatelessWidget {
   @override
@@ -28,16 +33,35 @@ class BodyCitas extends StatelessWidget {
         Expanded(  // Asegura que el widget de calendario tenga espacio para expandirse
           child: SingleMonthCalendar(),
         ),
-        Expanded(  // Hace scroll todas las tarjetas de citas
-          child: ListView(
-            children: [
-              AppointmentCard(),
-              SizedBox(height: 15), // Ajuste de espacio vertical
-              AppointmentCard(),
-              // Añade más tarjetas según sea necesario
-            ],
+        Expanded(
+          child: FutureBuilder<List<call_appointment.AppointmentData>>(
+            future: call_appointment.getAppointments(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                // Imprimir el error en la consola
+                debugPrint("Error al cargar citas: ${snapshot.error}");
+                // Mostrar el error en la UI
+                return Center(
+                    child:
+                        Text('Error al cargar los datos: ${snapshot.error}'));
+              } else if (snapshot.hasData) {
+                List<call_appointment.AppointmentData> appointments =
+                    snapshot.data ?? [];
+                return ListView.builder(
+                  itemCount: appointments.length,
+                  itemBuilder: (context, index) {
+                    return appointment_card.AppointmentCard(
+                        appointment: appointments[index]);
+                  },
+                );
+              } else {
+                return Center(child: Text('No hay citas disponibles'));
+              }
+            },
           ),
-        ),
+        )
       ],
     );
   }
