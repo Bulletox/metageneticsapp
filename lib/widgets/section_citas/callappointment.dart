@@ -50,7 +50,7 @@ Future<List<AppointmentData>> getAppointments() async {
     var doctorDoc = await (data['doctor_id'] as DocumentReference).get();
     var doctorData = doctorDoc.data() as Map<String, dynamic>;
     var doctorName = doctorData['name'] ?? 'Nombre no disponible';
-    var specialty = doctorData['specialty'] ?? 'Especialidad no disponible';
+    var specialty = doctorData['speciality'] ?? 'Especialidad no disponible';
 
     // Obtener la información del color
     var colorDoc = await (doctorData['color'] as DocumentReference).get();
