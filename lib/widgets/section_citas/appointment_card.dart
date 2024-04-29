@@ -10,10 +10,11 @@ class AppointmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Definir colores y estilos para la tarjeta
-    const cardColor = Color(0xFFffdcdc);
+
     const titleColor = Colors.black;
     const subTitleColor = Color(0xFF4c4242);
-    const detailColor = Color(0xFFFF5151);
+    final detailColor = Color(int.parse(appointment.color.replaceFirst('#', '0xff')));
+    final cardColor = Color(int.parse(appointment.colorLight.replaceFirst('#', '0xff')));
 
     // Puedes ajustar los estilos según tu diseño
     final titleStyle = GoogleFonts.poppins(
@@ -37,6 +38,7 @@ class AppointmentCard extends StatelessWidget {
     // Construir la tarjeta de cita
     return Card(
       color: cardColor,
+      // elevation: 0.0,
       margin: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
@@ -51,7 +53,7 @@ class AppointmentCard extends StatelessWidget {
             const SizedBox(height: 8), // Espacio vertical
 
             // Subtítulo (especialidad)
-            Text(appointment.specialty, style: subTitleStyle),
+            Text(appointment.specialty, style: detailStyle),
             const SizedBox(height: 8), // Espacio vertical
 
             // ID del doctor

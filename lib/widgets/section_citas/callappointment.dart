@@ -2,71 +2,75 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppointmentData {
-  final String doctorName; // Cambiado de doctorId a doctorName
+  final String doctorName;
   final String date;
   final String specialty;
+  final String color;
+  final String colorLight;
 
   AppointmentData({
-    required this.doctorName, // Cambiado de doctorId a doctorName
+    required this.doctorName,
     required this.date,
     required this.specialty,
+    required this.color,
+    required this.colorLight,
   });
 
-  // Se asume que este método ahora recibirá el nombre del doctor además de la fecha y especialidad.
-  factory AppointmentData.fromMap(Map<String, dynamic> map, String doctorName) {
-    // Formatea la fecha a un formato legible, como 'dd/MM/yyyy HH:mm'.
-    var formattedDate = DateFormat('dd/MM/yyyy HH:mm').format((map['date'] as Timestamp).toDate());
-    
+  factory AppointmentData.fromMap(
+      Map<String, dynamic> map,
+      String doctorName,
+      String specialty,
+      String color,
+      String colorLight) {
+    var formattedDate = DateFormat('dd/MM/yyyy HH:mm')
+        .format((map['date'] as Timestamp).toDate());
+
     return AppointmentData(
-      doctorName: doctorName, // Usar el nombre del doctor proporcionado
+      doctorName: doctorName,
       date: formattedDate,
-      specialty: map['specialty'] ?? '',
+      specialty: specialty,
+      color: color,
+      colorLight: colorLight,
     );
   }
 }
 
 Future<List<AppointmentData>> getAppointments() async {
-  QuerySnapshot<Map<String, dynamic>> querySnapshot =
+  QuerySnapshot<Map<String, dynamic>> appointmentSnapshot =
       await FirebaseFirestore.instance.collection('appointments').get();
 
   List<AppointmentData> appointments = [];
-  for (var doc in querySnapshot.docs) {
-    var appointmentData = doc.data() as Map<String, dynamic>;
 
-    // Asegúrate de que doctor_id no sea null antes de proceder
-    if (appointmentData['doctor_id'] == null) {
-      continue; // Si es null, omitir este documento y continuar con el siguiente
-    }
+  for (var doc in appointmentSnapshot.docs) {
+    var data = doc.data();
 
-    DocumentReference doctorRef = appointmentData['doctor_id'] as DocumentReference;
+    if (data['doctor_id'] == null || data['date'] == null) continue;
 
-    // Verifica si la referencia del doctor existe y obtiene el documento
-    DocumentSnapshot doctorSnapshot = await doctorRef.get();
+    // Obtener la información del doctor
+    var doctorDoc = await (data['doctor_id'] as DocumentReference).get();
+    var doctorData = doctorDoc.data() as Map<String, dynamic>;
+    var doctorName = doctorData['name'] ?? 'Nombre no disponible';
+    var specialty = doctorData['specialty'] ?? 'Especialidad no disponible';
 
-    String doctorName = 'Nombre no disponible';
-    String specialty = 'Especialidad no disponible';
-    if (doctorSnapshot.exists && doctorSnapshot.data() != null) {
-      Map<String, dynamic> doctorData = doctorSnapshot.data() as Map<String, dynamic>;
-      doctorName = doctorData['name'] ?? 'Nombre no disponible';
-      specialty = doctorData['specialty'] ?? 'Especialidad no disponible';
-    }
+    // Obtener la información del color
+    var colorDoc = await (doctorData['color'] as DocumentReference).get();
+    var colorData = colorDoc.data() as Map<String, dynamic>;
+    var color = colorData['hex'] ?? 'Color no disponible';
+    var colorLight = colorData['hexLight'] ?? 'Color Light no disponible';
 
-    // Convertir el Timestamp a String para la fecha
-    var formattedDate = '';
-    if (appointmentData['date'] is Timestamp) {
-      formattedDate = DateFormat('dd/MM/yyyy HH:mm').format((appointmentData['date'] as Timestamp).toDate());
-    }
+    // Convertir la fecha
+    var formattedDate = DateFormat('dd/MM/yyyy HH:mm')
+        .format((data['date'] as Timestamp).toDate());
 
-    // Crea el objeto AppointmentData con la información obtenida
-    AppointmentData appointment = AppointmentData(
+    // Añadir el objeto de la cita a la lista
+    appointments.add(AppointmentData(
       doctorName: doctorName,
       date: formattedDate,
-      specialty: specialty, // Usar la especialidad obtenida
-    );
-    appointments.add(appointment);
+      specialty: specialty,
+      color: color,
+      colorLight: colorLight,
+    ));
   }
 
   return appointments;
 }
-
-
