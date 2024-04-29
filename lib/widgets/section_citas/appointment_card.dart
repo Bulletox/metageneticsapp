@@ -38,7 +38,7 @@ class AppointmentCard extends StatelessWidget {
     // Construir la tarjeta de cita
     return Card(
       color: cardColor,
-      // elevation: 0.0,
+      elevation: 0.0,
       margin: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
