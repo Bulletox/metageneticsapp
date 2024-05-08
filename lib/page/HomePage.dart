@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:metageneticsapp/widgets/section_citas/body_citas.dart';
 import 'package:metageneticsapp/widgets/section_historial/body_historial.dart';
 import 'package:metageneticsapp/widgets/section_perfil/body_perfil.dart';
+import 'package:metageneticsapp/widgets/section_period/body_period.dart';
 import '../widgets/navigation_bars/nav_bottom.dart';
 import '../widgets/navigation_bars/nav_top.dart';
 import '../widgets/section_home/body_home.dart';
+
 
 
 class HomePage extends StatefulWidget {
@@ -61,6 +63,8 @@ class _HomePageState extends State<HomePage> {
         return BodyHome();
       case BottomNavigationIndex.Profile:
         return BodyPerfil();
+      case BottomNavigationIndex.Period:
+        return BodyPeriod();
       default:
         return Container(); // Devolvemos un widget vacío por defecto
     }
