@@ -31,7 +31,7 @@ class BodyCitas extends StatelessWidget {
           ),
         ),
         Expanded(  // Asegura que el widget de calendario tenga espacio para expandirse
-          child: SingleMonthCalendar(),
+          child: CalendarWithAppointments(),
         ),
         Expanded(
           child: FutureBuilder<List<call_appointment.AppointmentData>>(
