@@ -6,8 +6,7 @@ import 'package:metageneticsapp/widgets/section_period/body_period.dart';
 import '../widgets/navigation_bars/nav_bottom.dart';
 import '../widgets/navigation_bars/nav_top.dart';
 import '../widgets/section_home/body_home.dart';
-
-
+import '../widgets/section_tests/body_test.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,13 +23,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TopNavigation(
-        isSwitched: _isSwitched, // Pasamos el valor de _isSwitched aquí
-        onSwitchChanged: (value) {
-          setState(() {
-            _isSwitched = value; // Actualizamos el valor de _isSwitched cuando cambia el switch
-          });
-        },
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight), // Define la altura deseada del AppBar
+        child: TopNavigation(
+          isSwitched: _isSwitched, // Pasamos el valor de _isSwitched aquí
+          onSwitchChanged: (value) {
+            setState(() {
+              _isSwitched = value; // Actualizamos el valor de _isSwitched cuando cambia el switch
+            });
+          },
+        ),
       ),
       backgroundColor: Colors.white,
       body: AnimatedSwitcher(
@@ -65,6 +67,8 @@ class _HomePageState extends State<HomePage> {
         return BodyPerfil();
       case BottomNavigationIndex.Period:
         return BodyPeriod();
+      case BottomNavigationIndex.Test:
+        return BodyTest();
       default:
         return Container(); // Devolvemos un widget vacío por defecto
     }

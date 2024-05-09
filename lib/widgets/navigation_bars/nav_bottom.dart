@@ -8,6 +8,7 @@ enum BottomNavigationIndex {
   Home,
   Period,
   Profile,
+  Test
 }
 
 class BottomNavigation extends StatefulWidget {
@@ -54,6 +55,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
         return BottomNavigationIndex.Period;
       case 4:
         return BottomNavigationIndex.Profile;
+      case 5:
+        return BottomNavigationIndex.Test;
       default:
         return BottomNavigationIndex.Home;
     }
@@ -113,6 +116,18 @@ final _navBarItems = [
     icon: const Icon(Icons.person),
     title: Text(
       'Perfil',
+      style: GoogleFonts.poppins(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    selectedColor: Colors.redAccent,
+    unselectedColor: Colors.grey,
+  ),
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.settings),
+    title: Text(
+      'Test',
       style: GoogleFonts.poppins(
         fontSize: 14,
         fontWeight: FontWeight.bold,
