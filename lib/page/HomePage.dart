@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
       case BottomNavigationIndex.History:
         return BodyHistorial();
       case BottomNavigationIndex.Citas:
-        return BodyCitas();
+        return BodyCitas(onAddTask: () {});
       case BottomNavigationIndex.Home:
         return BodyHome();
       case BottomNavigationIndex.Profile:

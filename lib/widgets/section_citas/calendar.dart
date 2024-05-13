@@ -11,14 +11,15 @@ class _CalendarWithAppointmentsState extends State<CalendarWithAppointments> {
   Map<DateTime, List<dynamic>> _appointments = {};
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  List<DateTime> _highlightedDays = [];  // Lista para almacenar los días resaltados
+  List<DateTime> _highlightedDays = [];
+  CalendarFormat _calendarFormat = CalendarFormat.month;  // Estado para el formato del calendario
 
   @override
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
     fetchAppointments();
-    fetchHighlightedDays();  // Método para cargar los días resaltados
+    fetchHighlightedDays();
   }
 
   void fetchAppointments() async {
@@ -48,6 +49,12 @@ class _CalendarWithAppointmentsState extends State<CalendarWithAppointments> {
     });
   }
 
+  void _onFormatChanged(CalendarFormat format) {
+    setState(() {
+      _calendarFormat = format;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +73,8 @@ class _CalendarWithAppointmentsState extends State<CalendarWithAppointments> {
               });
             },
             eventLoader: (day) => _appointments[DateTime(day.year, day.month, day.day)] ?? [],
-            calendarFormat: CalendarFormat.month,
+            calendarFormat: _calendarFormat,
+            onFormatChanged: _onFormatChanged,  // Función para manejar cambios de formato
             onPageChanged: (focusedDay) {
               _focusedDay = focusedDay;
             },
@@ -78,7 +86,7 @@ class _CalendarWithAppointmentsState extends State<CalendarWithAppointments> {
                       margin: const EdgeInsets.all(4.0),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Color(0xFFffdcdc),  // El color para resaltar
+                        color: Color(0xFFffdcdc),
                         shape: BoxShape.circle,
                       ),
                       child: Text(
@@ -88,7 +96,7 @@ class _CalendarWithAppointmentsState extends State<CalendarWithAppointments> {
                     );
                   }
                 }
-                return null;  // Utiliza el builder predeterminado si el día no está en la lista de resaltados
+                return null;  // Utiliza el constructor predeterminado si el día no está resaltado
               },
             ),
           ),
