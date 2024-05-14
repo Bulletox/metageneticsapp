@@ -30,9 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  
   fluttertoast: ^8.0.8
   flutter_local_notifications: ^8.0.0+4
+  
 
   # Dependencias
   cupertino_icons: ^1.0.2
@@ -44,7 +45,6 @@ dependencies:
   fl_chart: ^0.36.0
   cloud_firestore: ^4.15.8
   table_calendar: ^3.1.1
-  intl: ^0.19.0
   
 dev_dependencies:
   flutter_test:

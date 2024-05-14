@@ -21,7 +21,12 @@ class BodyTest extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Container(),
+          child: Stack(
+            children: [
+              Container(), // Puedes agregar más widgets aquí
+              // CitasNotification(), // Añade el widget CitasNotification aquí
+            ],
+          ),
         ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'water_notification.dart'; // Importa el widget WaterNotification
+import 'citas_notification.dart'; // Importa el widget CitasNotification
 
 class TopNavigation extends StatefulWidget implements PreferredSizeWidget {
   final bool isSwitched;
@@ -51,6 +52,7 @@ class _TopNavigationState extends State<TopNavigation> {
             ),
           ),
           WaterNotification(), // Aquí se agrega WaterNotification como un hijo de TopNavigation
+          CitasNotification(), // Aquí se agrega CitasNotification como un hijo de TopNavigation
         ],
       ),
     );

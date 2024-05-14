@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:math';
 
-class WaterNotification extends StatefulWidget {
+class CitasNotification extends StatefulWidget {
   @override
-  _WaterNotificationState createState() => _WaterNotificationState();
+  _CitasNotificationState createState() => _CitasNotificationState();
 }
 
-class _WaterNotificationState extends State<WaterNotification> with SingleTickerProviderStateMixin {
+class _CitasNotificationState extends State<CitasNotification> with SingleTickerProviderStateMixin {
   late Timer _timer;
   bool _isPopupOpen = false;
   late AnimationController _controller;
@@ -33,11 +32,11 @@ class _WaterNotificationState extends State<WaterNotification> with SingleTicker
       curve: Curves.easeInOut,
     ));
 
-    _timer = Timer.periodic(Duration(seconds: 30), (timer) {
-      if (!_isPopupOpen) {
-        _showReminderPopup(context);
-      }
-    });
+    _timer = Timer(Duration(seconds: 3), () {
+  if (!_isPopupOpen) {
+    _showReminderPopup(context);
+  }
+});
   }
 
   @override
@@ -47,11 +46,29 @@ class _WaterNotificationState extends State<WaterNotification> with SingleTicker
     super.dispose();
   }
 
-  Future<String> _getRandomNotification() async {
-    final Random random = Random();
-    int randomNumber = random.nextInt(10) + 1; // Genera un número aleatorio entre 1 y 10
-    final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('Notificaciones').doc('$randomNumber').get();
-    return documentSnapshot['text'] ?? '';
+  Future<String> _getNextAppointmentNotification() async {
+    QuerySnapshot appointmentsSnapshot = await FirebaseFirestore.instance
+        .collection('appointments')
+        .orderBy('date')
+        .limit(1)
+        .get();
+
+    if (appointmentsSnapshot.docs.isEmpty) {
+      return 'No tienes citas próximas.';
+    }
+
+    DocumentSnapshot appointmentDoc = appointmentsSnapshot.docs.first;
+    Timestamp dateTimestamp = appointmentDoc['date'];
+    DateTime appointmentDate = dateTimestamp.toDate();
+    DocumentReference doctorRef = appointmentDoc['doctor_id'];
+
+    DocumentSnapshot doctorDoc = await doctorRef.get();
+    String doctorName = doctorDoc['name'];
+
+    String formattedDate = "${appointmentDate.day}-${appointmentDate.month}-${appointmentDate.year}";
+    String formattedTime = "${appointmentDate.hour}:${appointmentDate.minute.toString().padLeft(2, '0')}";
+
+    return 'Tienes una cita el próximo $formattedDate a las $formattedTime con el doctor $doctorName';
   }
 
   void _showReminderPopup(BuildContext context) async {
@@ -59,7 +76,7 @@ class _WaterNotificationState extends State<WaterNotification> with SingleTicker
       _isPopupOpen = true;
       _controller.forward();
 
-      final notificationText = await _getRandomNotification();
+      final notificationText = await _getNextAppointmentNotification();
       setState(() {
         _notificationText = notificationText;
       });
@@ -72,41 +89,41 @@ class _WaterNotificationState extends State<WaterNotification> with SingleTicker
   OverlayEntry _createOverlayEntry() {
     return OverlayEntry(
       builder: (context) => Align(
-  alignment: Alignment.topCenter,
-  child: SlideTransition(
-    position: _offsetAnimation,
-    child: Dismissible(
-      key: Key('water_notification'),
-      direction: DismissDirection.horizontal,
-      onDismissed: (direction) {
-        setState(() {
-          _isPopupOpen = false;
-          _controller.reverse();
-          _overlayEntry?.remove();
-          _overlayEntry = null; // Establece el OverlayEntry a null después de eliminarlo
-        });
-      },
-      child: Container(
-        margin: EdgeInsets.only(top: 20), // Espacio desde la parte superior
-        width: MediaQuery.of(context).size.width * 0.8,
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        decoration: BoxDecoration(
-          color: Color(0xFFC2D8FA),
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 2,
-              offset: Offset(0, 2),
+        alignment: Alignment.topCenter,
+        child: SlideTransition(
+          position: _offsetAnimation,
+          child: Dismissible(
+            key: Key('citas_notification'),
+            direction: DismissDirection.horizontal,
+            onDismissed: (direction) {
+              setState(() {
+                _isPopupOpen = false;
+                _controller.reverse();
+                _overlayEntry?.remove();
+                _overlayEntry = null; // Establece el OverlayEntry a null después de eliminarlo
+              });
+            },
+            child: Container(
+              margin: EdgeInsets.only(top: 20), // Espacio desde la parte superior
+              width: MediaQuery.of(context).size.width * 0.8,
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 250, 194, 194),
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 2,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: _buildNotificationContent(context),
             ),
-          ],
+          ),
         ),
-        child: _buildNotificationContent(context),
       ),
-    ),
-  ),
-),
     );
   }
 
@@ -117,7 +134,7 @@ class _WaterNotificationState extends State<WaterNotification> with SingleTicker
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildRow('💧', '¡Recuerda hidratarte!'),
+            _buildRow('📋', '¡Tienes una nueva cita!'),
             IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
