@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:metageneticsapp/widgets/section_citas/callappointment.dart'
-    as call_appointment;
+import 'package:metageneticsapp/widgets/section_citas/callappointment.dart' as call_appointment;
 import 'package:metageneticsapp/widgets/section_citas/calendar.dart';
-import 'package:metageneticsapp/widgets/section_citas/appointment_card.dart'
-    as appointment_card;
+import 'package:metageneticsapp/widgets/section_citas/appointment_card.dart' as appointment_card;
 import 'package:metageneticsapp/widgets/section_citas/task/add_task_dialog.dart';
 
 class BodyCitas extends StatelessWidget {
@@ -38,8 +36,8 @@ class BodyCitas extends StatelessWidget {
             child: CalendarWithAppointments(),
           ),
           Expanded(
-            child: FutureBuilder<List<call_appointment.AppointmentData>>(
-              future: call_appointment.getAppointments(),
+            child: StreamBuilder<List<call_appointment.AppointmentData>>(
+              stream: call_appointment.getAppointmentsStream(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
