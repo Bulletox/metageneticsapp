@@ -32,7 +32,7 @@ class ScheduleAppointmentDialog extends StatefulWidget {
 }
 
 class _ScheduleAppointmentDialogState extends State<ScheduleAppointmentDialog> {
-  DateTime? _selectedDate;
+  DateTime? _selectedDateTime;
   final _formKey = GlobalKey<FormState>();
   List<Doctor> doctors = [];
   String? selectedSpecialty;
@@ -113,10 +113,10 @@ class _ScheduleAppointmentDialogState extends State<ScheduleAppointmentDialog> {
                       value == null ? 'Por favor seleccione un doctor' : null,
                 ),
               DateInputWidget(
-                selectedDate: _selectedDate,
-                onSelectDate: (date) {
+                selectedDate: _selectedDateTime,
+                onSelectDate: (dateTime) {
                   setState(() {
-                    _selectedDate = date;
+                    _selectedDateTime = dateTime;
                   });
                 },
               ),
@@ -133,7 +133,7 @@ class _ScheduleAppointmentDialogState extends State<ScheduleAppointmentDialog> {
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               // Primero valida el formulario
-              if (selectedDoctor != null && _selectedDate != null) {
+              if (selectedDoctor != null && _selectedDateTime != null) {
                 addAppointment(); // Llama a la función que añade la cita a Firestore
               } else {
                 print("Debe seleccionar un doctor y una fecha.");
@@ -151,12 +151,12 @@ class _ScheduleAppointmentDialogState extends State<ScheduleAppointmentDialog> {
   Future<void> addAppointment() async {
     if (_formKey.currentState!.validate() &&
         selectedDoctor != null &&
-        _selectedDate != null) {
+        _selectedDateTime != null) {
       DocumentReference doctorRef = FirebaseFirestore.instance
           .collection('Doctores')
           .doc(selectedDoctor!.id);
       Map<String, dynamic> appointmentData = {
-        'date': Timestamp.fromDate(_selectedDate!), // Firestore usa Timestamp
+        'date': Timestamp.fromDate(_selectedDateTime!), // Firestore usa Timestamp
         'doctor_id': doctorRef,
         // 'user_id': userId,  // Asegúrate de agregar el userId si es necesario.
       };

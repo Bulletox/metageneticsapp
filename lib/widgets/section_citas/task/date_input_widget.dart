@@ -36,24 +36,47 @@ class DateInputWidget extends StatelessWidget {
         );
 
         if (pickedDate != null) {
-          onSelectDate(pickedDate);
+          TimeOfDay? pickedTime = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(selectedDate ?? DateTime.now()),
+            builder: (BuildContext context, Widget? child) {
+              return Theme(
+                data: ThemeData.light().copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: Colors.blue, // Cambia el color del time picker aquí
+                    onPrimary: Colors.white, // Cambia el color del texto del time picker aquí
+                  ),
+                  textTheme: TextTheme(
+                    bodyText1: TextStyle(color: Colors.black), // Cambia el color del texto del botón de tiempo aquí
+                  ),
+                  // Ajusta otros estilos según sea necesario
+                ),
+                child: child!,
+              );
+            },
+          );
+
+          if (pickedTime != null) {
+            final dateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
+            onSelectDate(dateTime);
+          }
         }
       },
       child: InputDecorator(
         decoration: const InputDecoration(
-          labelText: 'Fecha de entrega',
+          labelText: 'Fecha y hora de entrega',
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             if (selectedDate != null)
               Text(
-                _formatDate(selectedDate!),
-                style: const TextStyle(color: Color.fromARGB(255,44, 51, 51), fontWeight: FontWeight.bold),
+                _formatDateTime(selectedDate!),
+                style: const TextStyle(color: Color.fromARGB(255, 44, 51, 51), fontWeight: FontWeight.bold),
               )
             else
               const Text(
-                'Seleccione la fecha',
+                'Seleccione la fecha y la hora',
                 style: TextStyle(color: Colors.grey),
               ),
             const Icon(Icons.calendar_today, color: Colors.black87),
@@ -63,7 +86,7 @@ class DateInputWidget extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime date) {
-    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+  String _formatDateTime(DateTime date) {
+    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
   }
 }
