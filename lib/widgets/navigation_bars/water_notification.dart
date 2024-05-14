@@ -72,33 +72,41 @@ class _WaterNotificationState extends State<WaterNotification> with SingleTicker
   OverlayEntry _createOverlayEntry() {
     return OverlayEntry(
       builder: (context) => Align(
-        alignment: Alignment.topCenter,
-        child: SlideTransition(
-          position: _offsetAnimation,
-          child: Dismissible(
-            key: Key('water_notification'),
-            direction: DismissDirection.horizontal,
-            onDismissed: (direction) {
-              setState(() {
-                _isPopupOpen = false;
-                _controller.reverse();
-                _overlayEntry?.remove();
-                _overlayEntry = null; // Establece el OverlayEntry a null después de eliminarlo
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(top: 20), // Espacio desde la parte superior
-              width: MediaQuery.of(context).size.width * 0.8,
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              decoration: BoxDecoration(
-                color: Color(0xFFC2D8FA),
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: _buildNotificationContent(context),
+  alignment: Alignment.topCenter,
+  child: SlideTransition(
+    position: _offsetAnimation,
+    child: Dismissible(
+      key: Key('water_notification'),
+      direction: DismissDirection.horizontal,
+      onDismissed: (direction) {
+        setState(() {
+          _isPopupOpen = false;
+          _controller.reverse();
+          _overlayEntry?.remove();
+          _overlayEntry = null; // Establece el OverlayEntry a null después de eliminarlo
+        });
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20), // Espacio desde la parte superior
+        width: MediaQuery.of(context).size.width * 0.8,
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        decoration: BoxDecoration(
+          color: Color(0xFFC2D8FA),
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: Offset(0, 2),
             ),
-          ),
+          ],
         ),
+        child: _buildNotificationContent(context),
       ),
+    ),
+  ),
+),
     );
   }
 
