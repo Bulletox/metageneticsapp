@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:metageneticsapp/page/sign_in_page.dart';
+import 'water_notification.dart'; // Importa el widget WaterNotification
 
 class TopNavigation extends StatefulWidget implements PreferredSizeWidget {
   final bool isSwitched;
@@ -22,17 +20,10 @@ class TopNavigation extends StatefulWidget implements PreferredSizeWidget {
 
 class _TopNavigationState extends State<TopNavigation> {
   bool _isHovered = false;
-  late Timer _hydrationTimer; 
-
-
 
   void _logout() async {
     print('Cerrando sesión...');
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => SignInPage2()),
-    );
+    // código de cierre de sesión
   }
 
   @override
@@ -59,6 +50,7 @@ class _TopNavigationState extends State<TopNavigation> {
               ),
             ),
           ),
+          WaterNotification(), // Aquí se agrega WaterNotification como un hijo de TopNavigation
         ],
       ),
     );
