@@ -32,26 +32,24 @@ class _BodyPeriodState extends State<BodyPeriod> {
   }
 
   void _scrollToCurrentMonth() {
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    final double monthHeight = 450; // Estimación de la altura de cada mes
-    final int currentMonthIndex = _focusedDay.month - 1 + 12; // Índice del mes actual
-    final double initialOffset = currentMonthIndex * monthHeight; // Desplazarse a la posición del mes actual
-    _scrollController.animateTo(
-      initialOffset,
-      duration: Duration(milliseconds: 40),
-      curve: Curves.fastLinearToSlowEaseIn,
-    );
-  });
-}
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final double monthHeight = 450; // Estimación de la altura de cada mes
+      final int currentMonthIndex = _focusedDay.month - 1 + 12; // Índice del mes actual
+      final double initialOffset = currentMonthIndex * monthHeight; // Desplazarse a la posición del mes actual
+      _scrollController.animateTo(
+        initialOffset,
+        duration: Duration(milliseconds: 1000),
+        curve: Curves.fastLinearToSlowEaseIn,
+      );
+    });
+  }
 
   void _loadPeriodDates() async {
     try {
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await FirebaseFirestore.instance
-              .collection('periods')
-              .orderBy('start')
-              .get();
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
+          .collection('periods')
+          .orderBy('start')
+          .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         setState(() {
@@ -65,8 +63,7 @@ class _BodyPeriodState extends State<BodyPeriod> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error al cargar las fechas del período: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error al cargar las fechas del período: $e')));
     }
   }
 
@@ -90,8 +87,7 @@ class _BodyPeriodState extends State<BodyPeriod> {
             'start': startPicked,
             'end': endPicked,
           });
-          _savePeriodDatesToFirebase(
-              startPicked, endPicked); // Guardar las fechas en Firebase
+          _savePeriodDatesToFirebase(startPicked, endPicked); // Guardar las fechas en Firebase
         });
       }
     }
@@ -103,18 +99,15 @@ class _BodyPeriodState extends State<BodyPeriod> {
         'start': Timestamp.fromDate(start),
         'end': Timestamp.fromDate(end),
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Fechas del período guardadas exitosamente.')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Fechas del período guardadas exitosamente.')));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error al guardar las fechas del período: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error al guardar las fechas del período: $e')));
     }
   }
 
   bool _isPeriodDay(DateTime day) {
     for (var period in _periods) {
-      if (day.isAfter(period['start']!.subtract(Duration(days: 1))) &&
-          day.isBefore(period['end']!.add(Duration(days: 1)))) {
+      if (day.isAfter(period['start']!.subtract(Duration(days: 1))) && day.isBefore(period['end']!.add(Duration(days: 1)))) {
         return true;
       }
     }
@@ -125,24 +118,19 @@ class _BodyPeriodState extends State<BodyPeriod> {
     if (_periods.isEmpty) return false;
     DateTime lastPeriodStart = _periods.last['start']!;
     DateTime predictedStart = lastPeriodStart.add(Duration(days: _cycleLength));
-    DateTime predictedEnd =
-        predictedStart.add(Duration(days: _periodLength - 1));
+    DateTime predictedEnd = predictedStart.add(Duration(days: _periodLength - 1));
     while (predictedEnd.isBefore(day)) {
       predictedStart = predictedStart.add(Duration(days: _cycleLength));
       predictedEnd = predictedStart.add(Duration(days: _periodLength - 1));
     }
-    return day.isAfter(predictedStart.subtract(Duration(days: 1))) &&
-        day.isBefore(predictedEnd.add(Duration(days: 1)));
+    return day.isAfter(predictedStart.subtract(Duration(days: 1))) && day.isBefore(predictedEnd.add(Duration(days: 1)));
   }
 
   bool _isOvulationDay(DateTime day) {
     for (var period in _periods) {
-      DateTime ovulationStart =
-          period['start']!.add(Duration(days: _periodLength + 7));
-      DateTime ovulationEnd = ovulationStart
-          .add(Duration(days: _ovulationWindowEnd - _ovulationWindowStart));
-      if (day.isAfter(ovulationStart.subtract(Duration(days: 1))) &&
-          day.isBefore(ovulationEnd.add(Duration(days: 1)))) {
+      DateTime ovulationStart = period['start']!.add(Duration(days: _periodLength + 7));
+      DateTime ovulationEnd = ovulationStart.add(Duration(days: _ovulationWindowEnd - _ovulationWindowStart));
+      if (day.isAfter(ovulationStart.subtract(Duration(days: 1))) && day.isBefore(ovulationEnd.add(Duration(days: 1)))) {
         return true;
       }
     }
@@ -152,18 +140,13 @@ class _BodyPeriodState extends State<BodyPeriod> {
   bool _isPredictedOvulationDay(DateTime day) {
     if (_periods.isEmpty) return false;
     DateTime lastPeriodStart = _periods.last['start']!;
-    DateTime predictedOvulationStart =
-        lastPeriodStart.add(Duration(days: _cycleLength + _periodLength + 7));
-    DateTime predictedOvulationEnd = predictedOvulationStart
-        .add(Duration(days: _ovulationWindowEnd - _ovulationWindowStart));
+    DateTime predictedOvulationStart = lastPeriodStart.add(Duration(days: _cycleLength + _periodLength + 7));
+    DateTime predictedOvulationEnd = predictedOvulationStart.add(Duration(days: _ovulationWindowEnd - _ovulationWindowStart));
     while (predictedOvulationEnd.isBefore(day)) {
-      predictedOvulationStart =
-          predictedOvulationStart.add(Duration(days: _cycleLength));
-      predictedOvulationEnd = predictedOvulationStart
-          .add(Duration(days: _ovulationWindowEnd - _ovulationWindowStart));
+      predictedOvulationStart = predictedOvulationStart.add(Duration(days: _cycleLength));
+      predictedOvulationEnd = predictedOvulationStart.add(Duration(days: _ovulationWindowEnd - _ovulationWindowStart));
     }
-    return day.isAfter(predictedOvulationStart.subtract(Duration(days: 1))) &&
-        day.isBefore(predictedOvulationEnd.add(Duration(days: 1)));
+    return day.isAfter(predictedOvulationStart.subtract(Duration(days: 1))) && day.isBefore(predictedOvulationEnd.add(Duration(days: 1)));
   }
 
   @override
@@ -194,8 +177,7 @@ class _BodyPeriodState extends State<BodyPeriod> {
                   );
                   return Container(
                     padding: const EdgeInsets.all(8),
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.white,
@@ -213,20 +195,14 @@ class _BodyPeriodState extends State<BodyPeriod> {
                       selectedDayPredicate: (day) {
                         return isSameDay(_selectedDay, day);
                       },
-                      onDaySelected: (selectedDay, focusedDay) {
-                        setState(() {
-                          _selectedDay = selectedDay;
-                          _focusedDay =
-                              focusedDay; // update `_focusedDay` here as well
-                        });
-                      },
+                      onDaySelected: null, // Deshabilitar selección de día
                       calendarStyle: CalendarStyle(
                         todayDecoration: BoxDecoration(
-                          color: _isPeriodDay(DateTime.now())
-                              ? Colors.redAccent.withOpacity(0.5)
-                              : _isOvulationDay(DateTime.now())
-                                  ? Color.fromRGBO(29, 164, 167, 0.5)
-                                  : _isPredictedOvulationDay(DateTime.now())
+                          color: _isPeriodDay(_focusedDay)
+                              ? Colors.redAccent
+                              : _isOvulationDay(_focusedDay)
+                                  ? Color.fromRGBO(29, 164, 167, 1.0)
+                                  : _isPredictedOvulationDay(_focusedDay)
                                       ? Color.fromRGBO(29, 164, 167, 0.1)
                                       : Colors.grey.withOpacity(0.2),
                           shape: BoxShape.circle,
@@ -235,8 +211,7 @@ class _BodyPeriodState extends State<BodyPeriod> {
                           color: Colors.redAccent,
                           shape: BoxShape.circle,
                         ),
-                        outsideDaysVisible:
-                            false, // Ocultar los días de otros meses
+                        outsideDaysVisible: false, // Ocultar los días de otros meses
                       ),
                       headerStyle: HeaderStyle(
                         formatButtonVisible: false,
@@ -256,14 +231,15 @@ class _BodyPeriodState extends State<BodyPeriod> {
                             return Container(
                               margin: const EdgeInsets.all(6.0),
                               decoration: BoxDecoration(
-                                color: Colors.redAccent.withOpacity(0.5),
+                                color: day == _focusedDay
+                                    ? Colors.redAccent // Color intenso si está enfocado
+                                    : Colors.redAccent.withOpacity(0.5),
                                 shape: BoxShape.circle,
                               ),
                               child: Center(
                                 child: Text(
                                   '${day.day}',
-                                  style:
-                                      TextStyle().copyWith(color: Colors.white),
+                                  style: TextStyle().copyWith(color: Colors.white),
                                 ),
                               ),
                             );
@@ -274,7 +250,9 @@ class _BodyPeriodState extends State<BodyPeriod> {
                               margin: const EdgeInsets.all(6.0),
                               child: CustomPaint(
                                 painter: DashedCircleBorderPainter(
-                                  color: Colors.redAccent,
+                                  color: day == _focusedDay
+                                      ? Colors.redAccent // Color intenso si está enfocado
+                                      : Colors.redAccent,
                                   strokeWidth: 2.0,
                                   dashWidth: 5.0,
                                   dashSpace: 3.0,
@@ -282,8 +260,9 @@ class _BodyPeriodState extends State<BodyPeriod> {
                                 child: Center(
                                   child: Text(
                                     '${day.day}',
-                                    style: TextStyle()
-                                        .copyWith(color: Colors.redAccent),
+                                    style: TextStyle().copyWith(
+                                      color: day == _focusedDay ? Colors.redAccent : Colors.redAccent,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -292,14 +271,15 @@ class _BodyPeriodState extends State<BodyPeriod> {
                             return Container(
                               margin: const EdgeInsets.all(6.0),
                               decoration: BoxDecoration(
-                                color: Color.fromRGBO(29, 164, 167, 0.5),
+                                color: day == _focusedDay
+                                    ? Color.fromRGBO(29, 164, 167, 1.0) // Color intenso si está enfocado
+                                    : Color.fromRGBO(29, 164, 167, 0.5),
                                 shape: BoxShape.circle,
                               ),
                               child: Center(
                                 child: Text(
                                   '${day.day}',
-                                  style:
-                                      TextStyle().copyWith(color: Colors.white),
+                                  style: TextStyle().copyWith(color: Colors.white),
                                 ),
                               ),
                             );
@@ -310,7 +290,9 @@ class _BodyPeriodState extends State<BodyPeriod> {
                               margin: const EdgeInsets.all(6.0),
                               child: CustomPaint(
                                 painter: DashedCircleBorderPainter(
-                                  color: Color.fromRGBO(29, 164, 167, 1.0),
+                                  color: day == _focusedDay
+                                      ? Color.fromRGBO(29, 164, 167, 1.0) // Color intenso si está enfocado
+                                      : Color.fromRGBO(29, 164, 167, 1.0),
                                   strokeWidth: 2.0,
                                   dashWidth: 5.0,
                                   dashSpace: 3.0,
@@ -319,19 +301,33 @@ class _BodyPeriodState extends State<BodyPeriod> {
                                   child: Text(
                                     '${day.day}',
                                     style: TextStyle().copyWith(
-                                        color:
-                                            Color.fromRGBO(29, 164, 167, 1.0)),
+                                      color: day == _focusedDay
+                                          ? Color.fromRGBO(29, 164, 167, 1.0)
+                                          : Color.fromRGBO(29, 164, 167, 1.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return Container(
+                              margin: const EdgeInsets.all(6.0),
+                              decoration: BoxDecoration(
+                                color: day == _focusedDay
+                                    ? Colors.grey // Color gris si está enfocado y no es un día especial
+                                    : null,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '${day.day}',
+                                  style: TextStyle().copyWith(
+                                    color: day == _focusedDay ? Colors.white : Colors.black,
                                   ),
                                 ),
                               ),
                             );
                           }
-                          return Center(
-                            child: Text(
-                              '${day.day}',
-                              style: TextStyle().copyWith(color: Colors.black),
-                            ),
-                          );
                         },
                       ),
                     ),

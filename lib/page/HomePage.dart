@@ -67,8 +67,8 @@ class _HomePageState extends State<HomePage> {
         return BodyPerfil();
       case BottomNavigationIndex.Period:
         return BodyPeriod();
-      case BottomNavigationIndex.Test:
-        return BodyTest();
+      // case BottomNavigationIndex.Test:
+      //   return BodyTest();
       default:
         return Container(); // Devolvemos un widget vacío por defecto
     }
