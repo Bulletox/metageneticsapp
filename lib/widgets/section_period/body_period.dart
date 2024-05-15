@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'DashedCircleBorderPainter.dart';
 
 class BodyPeriod extends StatefulWidget {
@@ -13,9 +14,7 @@ class _BodyPeriodState extends State<BodyPeriod> {
   DateTime _selectedDay = DateTime.now();
   final ScrollController _scrollController = ScrollController();
 
-  // Definir las fechas de inicio y fin del periodo
-  DateTime? _periodStart;
-  DateTime? _periodEnd;
+  List<Map<String, DateTime>> _periods = [];
 
   // Normas para la predicción
   int _cycleLength = 28;
@@ -26,15 +25,43 @@ class _BodyPeriodState extends State<BodyPeriod> {
   @override
   void initState() {
     super.initState();
+    _loadPeriodDates();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToCurrentMonth();
     });
   }
 
   void _scrollToCurrentMonth() {
-    final double monthHeight = 450; // Estimación de la altura de cada mes
-    final double initialOffset = 12 * monthHeight; // Desplazarse a la posición del mes actual
-    _scrollController.jumpTo(initialOffset);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final double monthHeight = 450; // Estimación de la altura de cada mes
+      final int currentMonthIndex = _focusedDay.month - 1 + 12; // Índice del mes actual
+      final double initialOffset = currentMonthIndex * monthHeight; // Desplazarse a la posición del mes actual
+      _scrollController.animateTo(initialOffset,
+          duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    });
+  }
+
+  void _loadPeriodDates() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
+          .collection('periods')
+          .orderBy('start')
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        setState(() {
+          _periods = querySnapshot.docs.map((doc) {
+            var data = doc.data();
+            return {
+              'start': (data['start'] as Timestamp).toDate(),
+              'end': (data['end'] as Timestamp).toDate(),
+            };
+          }).toList();
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error al cargar las fechas del período: $e')));
+    }
   }
 
   void _selectPeriodDates() async {
@@ -53,36 +80,69 @@ class _BodyPeriodState extends State<BodyPeriod> {
       );
       if (endPicked != null) {
         setState(() {
-          _periodStart = startPicked;
-          _periodEnd = endPicked;
+          _periods.add({
+            'start': startPicked,
+            'end': endPicked,
+          });
+          _savePeriodDatesToFirebase(startPicked, endPicked); // Guardar las fechas en Firebase
         });
       }
     }
   }
 
+  void _savePeriodDatesToFirebase(DateTime start, DateTime end) async {
+    try {
+      await FirebaseFirestore.instance.collection('periods').add({
+        'start': Timestamp.fromDate(start),
+        'end': Timestamp.fromDate(end),
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Fechas del período guardadas exitosamente.')));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error al guardar las fechas del período: $e')));
+    }
+  }
+
   bool _isPeriodDay(DateTime day) {
-    if (_periodStart == null || _periodEnd == null) return false;
-    return day.isAfter(_periodStart!.subtract(Duration(days: 1))) && day.isBefore(_periodEnd!.add(Duration(days: 1)));
+    for (var period in _periods) {
+      if (day.isAfter(period['start']!.subtract(Duration(days: 1))) && day.isBefore(period['end']!.add(Duration(days: 1)))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   bool _isPredictedPeriodDay(DateTime day) {
-    if (_periodStart == null) return false;
-    DateTime predictedStart = _periodStart!.add(Duration(days: _cycleLength));
+    if (_periods.isEmpty) return false;
+    DateTime lastPeriodStart = _periods.last['start']!;
+    DateTime predictedStart = lastPeriodStart.add(Duration(days: _cycleLength));
     DateTime predictedEnd = predictedStart.add(Duration(days: _periodLength - 1));
+    while (predictedEnd.isBefore(day)) {
+      predictedStart = predictedStart.add(Duration(days: _cycleLength));
+      predictedEnd = predictedStart.add(Duration(days: _periodLength - 1));
+    }
     return day.isAfter(predictedStart.subtract(Duration(days: 1))) && day.isBefore(predictedEnd.add(Duration(days: 1)));
   }
 
   bool _isOvulationDay(DateTime day) {
-    if (_periodStart == null || _periodEnd == null) return false;
-    DateTime ovulationStart = _periodStart!.add(Duration(days: _periodLength + 7)); // Semana vacía después del periodo
-    DateTime ovulationEnd = ovulationStart.add(Duration(days: _ovulationWindowEnd - _ovulationWindowStart));
-    return day.isAfter(ovulationStart.subtract(Duration(days: 1))) && day.isBefore(ovulationEnd.add(Duration(days: 1)));
+    for (var period in _periods) {
+      DateTime ovulationStart = period['start']!.add(Duration(days: _periodLength + 7));
+      DateTime ovulationEnd = ovulationStart.add(Duration(days: _ovulationWindowEnd - _ovulationWindowStart));
+      if (day.isAfter(ovulationStart.subtract(Duration(days: 1))) && day.isBefore(ovulationEnd.add(Duration(days: 1)))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   bool _isPredictedOvulationDay(DateTime day) {
-    if (_periodStart == null) return false;
-    DateTime predictedOvulationStart = _periodStart!.add(Duration(days: _cycleLength + _periodLength + 7));
+    if (_periods.isEmpty) return false;
+    DateTime lastPeriodStart = _periods.last['start']!;
+    DateTime predictedOvulationStart = lastPeriodStart.add(Duration(days: _cycleLength + _periodLength + 7));
     DateTime predictedOvulationEnd = predictedOvulationStart.add(Duration(days: _ovulationWindowEnd - _ovulationWindowStart));
+    while (predictedOvulationEnd.isBefore(day)) {
+      predictedOvulationStart = predictedOvulationStart.add(Duration(days: _cycleLength));
+      predictedOvulationEnd = predictedOvulationStart.add(Duration(days: _ovulationWindowEnd - _ovulationWindowStart));
+    }
     return day.isAfter(predictedOvulationStart.subtract(Duration(days: 1))) && day.isBefore(predictedOvulationEnd.add(Duration(days: 1)));
   }
 
@@ -140,11 +200,11 @@ class _BodyPeriodState extends State<BodyPeriod> {
                       },
                       calendarStyle: CalendarStyle(
                         todayDecoration: BoxDecoration(
-                          color: _isPeriodDay(_focusedDay)
+                          color: _isPeriodDay(DateTime.now())
                               ? Colors.redAccent.withOpacity(0.5)
-                              : _isOvulationDay(_focusedDay)
+                              : _isOvulationDay(DateTime.now())
                                   ? Color.fromRGBO(29, 164, 167, 0.5)
-                                  : _isPredictedOvulationDay(_focusedDay)
+                                  : _isPredictedOvulationDay(DateTime.now())
                                       ? Color.fromRGBO(29, 164, 167, 0.1)
                                       : Colors.grey.withOpacity(0.2),
                           shape: BoxShape.circle,
