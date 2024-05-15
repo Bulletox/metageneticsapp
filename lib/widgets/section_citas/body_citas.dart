@@ -77,7 +77,7 @@ class BodyCitas extends StatelessWidget {
           );
         },
         child: Icon(Icons.add),
-        shape: CircleBorder(),
+        // shape: CircleBorder(),
         backgroundColor: Color.fromARGB(255, 165, 201, 202),
       ),
     );
